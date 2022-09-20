@@ -1,6 +1,7 @@
 package at.kaindorf.console;
 
 import at.kaindorf.access.IOAccess;
+import at.kaindorf.data.StudentData;
 import at.kaindorf.pojo.Student;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -13,15 +14,16 @@ public class Main {
     public static void main(String[] args) {
         int selection;
 
-        List<Student> studentList = IOAccess.importData();
+
 
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("PU_jpa_schuelerdaten");
         EntityManager em = emf.createEntityManager();
 
-        studentList.forEach(em::persist);
+        StudentData.getInstance().getStudentList().forEach(em::persist);
 
         em.getTransaction().begin();
         em.getTransaction().commit();
+
 
         do {
             System.out.println("Geben Sie Ihren Modus ein:");
@@ -39,15 +41,17 @@ public class Main {
 
             switch (selection) {
                 case 1:
-                    studentList.forEach(System.out::println);
+                    StudentData.getInstance().getStudentList().forEach(System.out::println);
                     break;
                 case 2:
                     System.out.println("ID:");
                     int id = scanner.nextInt();
 
-                    em.remove(studentList.get(id - 1));
-                    studentList.remove(id - 1);
-                    System.out.println("deleted");
+                    Student removeStudent = StudentData.getInstance().findStudentById(id);
+
+                    em.remove(removeStudent);
+                    StudentData.getInstance().getStudentList().remove(removeStudent);
+                    System.out.println("deleted - " + removeStudent);
                     break;
                 case 3:
                     System.out.println("initials: ");
@@ -61,13 +65,14 @@ public class Main {
 
                     Student student = new Student(initials, firstname, lastname, classname);
                     em.persist(student);
-                    studentList.add(student);
+                    StudentData.getInstance().getStudentList().add(student);
                     break;
                 case 4:
                     System.out.println("ID:");
                     int changeId = scanner.nextInt();
 
-                    Student changedStudent = studentList.get(changeId - 1);
+                    Student changedStudent = StudentData.getInstance().findStudentById(changeId);
+
 
                     System.out.println("--------------");
                     System.out.println("Initials: " + changedStudent.getInitials());
