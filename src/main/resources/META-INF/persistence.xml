@@ -15,4 +15,16 @@
             <property name="eclipselink.logging.level" value="FINE"/>
         </properties>
     </persistence-unit>
+    <persistence-unit name="PU_jpa_schuelerdaten_operational">
+        <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+        <class>at.kaindorf.pojo.Student</class>
+        <properties>
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/jpa_schuelerdaten"/>
+            <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+            <property name="jakarta.persistence.jdbc.user" value="postgres"/>
+            <property name="jakarta.persistence.jdbc.password" value="postgres"/>
+            <property name="jakarta.persistence.schema-generation.database.action" value="none"/>
+            <property name="eclipselink.logging.level" value="FINE"/>
+        </properties>
+    </persistence-unit>
 </persistence>

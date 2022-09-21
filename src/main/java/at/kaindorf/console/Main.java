@@ -1,13 +1,8 @@
 package at.kaindorf.console;
 
-import at.kaindorf.access.IOAccess;
 import at.kaindorf.data.StudentData;
 import at.kaindorf.pojo.Student;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class Main {
@@ -35,10 +30,15 @@ public class Main {
                     System.out.println("ID:");
                     int id = scanner.nextInt();
 
-                    Student removeStudent = StudentData.getInstance().findStudentById(id);
+                    Student removeStudent = StudentData.getInstance().findStudentByIdInDB(id);
 
-                    StudentData.getInstance().removeStudent(removeStudent);
-                    System.out.println("deleted - " + removeStudent);
+                    if (removeStudent == null) {
+                        System.out.println("Den Student gibt es nicht!");
+                    } else {
+
+                        StudentData.getInstance().removeStudent(removeStudent);
+                        System.out.println("deleted - " + removeStudent);
+                    }
                     break;
                 case 3:
                     System.out.println("initials: ");
@@ -57,33 +57,38 @@ public class Main {
                     System.out.println("ID:");
                     int changeId = scanner.nextInt();
 
-                    Student changedStudent = StudentData.getInstance().findStudentById(changeId);
+                    Student changedStudent = StudentData.getInstance().findStudentByIdInDB(changeId);
+
+                    if (changedStudent == null) {
+                        System.out.println("Den Student gibt es nicht!");
+                    } else {
 
 
-                    System.out.println("--------------");
-                    System.out.println("Initials: " + changedStudent.getInitials());
-                    System.out.println("Firstname: " + changedStudent.getFirstname());
-                    System.out.println("Lastname: " + changedStudent.getLastname());
-                    System.out.println("Classname: " + changedStudent.getClassname());
-                    System.out.println("--------------");
+                        System.out.println("--------------");
+                        System.out.println("Initials: " + changedStudent.getInitials());
+                        System.out.println("Firstname: " + changedStudent.getFirstname());
+                        System.out.println("Lastname: " + changedStudent.getLastname());
+                        System.out.println("Classname: " + changedStudent.getClassname());
+                        System.out.println("--------------");
 
-                    System.out.println("ChangedInitials: ");
-                    String changedInitials = scanner.next();
-                    System.out.println("ChangedFirstname: ");
-                    String changedFirstname = scanner.next();
-                    System.out.println("ChangedLastname: ");
-                    String changedLastname = scanner.next();
-                    System.out.println("ChangedClassname: ");
-                    String changedClassname = scanner.next();
+                        System.out.println("ChangedInitials: ");
+                        String changedInitials = scanner.next();
+                        System.out.println("ChangedFirstname: ");
+                        String changedFirstname = scanner.next();
+                        System.out.println("ChangedLastname: ");
+                        String changedLastname = scanner.next();
+                        System.out.println("ChangedClassname: ");
+                        String changedClassname = scanner.next();
 
-                    changedStudent.setInitials(changedInitials);
-                    changedStudent.setFirstname(changedFirstname);
-                    changedStudent.setLastname(changedLastname);
-                    changedStudent.setClassname(changedClassname);
+                        StudentData.getInstance().changeStudent(changedStudent,
+                                new Student(changedInitials, changedFirstname, changedLastname, changedClassname));
+                    }
                     break;
                 default:
             }
         } while (selection != 5);
+
+
 
         StudentData.getInstance().closeEntityManager();
     }
