@@ -1,8 +1,6 @@
 package at.kaindorf.pojo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @AllArgsConstructor
@@ -10,6 +8,9 @@ import lombok.*;
 @RequiredArgsConstructor
 @Data
 @Entity
+@NamedQueries({
+        @NamedQuery(name = "Student.getAllStudents",query = "SELECT s FROM Student s ORDER BY s.id")
+})
 public class Student {
     @Id
     @GeneratedValue

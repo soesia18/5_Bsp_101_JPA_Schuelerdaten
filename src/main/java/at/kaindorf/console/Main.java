@@ -14,17 +14,6 @@ public class Main {
     public static void main(String[] args) {
         int selection;
 
-
-
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("PU_jpa_schuelerdaten");
-        EntityManager em = emf.createEntityManager();
-
-        StudentData.getInstance().getStudentList().forEach(em::persist);
-
-        em.getTransaction().begin();
-        em.getTransaction().commit();
-
-
         do {
             System.out.println("Geben Sie Ihren Modus ein:");
             System.out.println("--------------");
@@ -34,14 +23,13 @@ public class Main {
             System.out.println("[4] - Change Student");
             System.out.println("[5] - Quit");
             System.out.println("--------------\n");
-
             Scanner scanner = new Scanner(System.in);
 
             selection = scanner.nextInt();
 
             switch (selection) {
                 case 1:
-                    StudentData.getInstance().getStudentList().forEach(System.out::println);
+                    StudentData.getInstance().getAllStudentsFromDatabase().forEach(System.out::println);
                     break;
                 case 2:
                     System.out.println("ID:");
@@ -49,8 +37,7 @@ public class Main {
 
                     Student removeStudent = StudentData.getInstance().findStudentById(id);
 
-                    em.remove(removeStudent);
-                    StudentData.getInstance().getStudentList().remove(removeStudent);
+                    StudentData.getInstance().removeStudent(removeStudent);
                     System.out.println("deleted - " + removeStudent);
                     break;
                 case 3:
@@ -64,8 +51,7 @@ public class Main {
                     String classname = scanner.next();
 
                     Student student = new Student(initials, firstname, lastname, classname);
-                    em.persist(student);
-                    StudentData.getInstance().getStudentList().add(student);
+                    StudentData.getInstance().addStudent(student);
                     break;
                 case 4:
                     System.out.println("ID:");
@@ -97,11 +83,9 @@ public class Main {
                     break;
                 default:
             }
-            em.getTransaction().begin();
-            em.getTransaction().commit();
         } while (selection != 5);
 
-        em.close();
-        emf.close();
+        StudentData.getInstance().closeEntityManager();
     }
+
 }
