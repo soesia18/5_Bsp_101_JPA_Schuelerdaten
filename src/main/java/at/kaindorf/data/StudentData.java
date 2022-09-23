@@ -23,7 +23,7 @@ public class StudentData {
 
         //studentList.forEach(em::persist);
 
-        //IOAccess.importData().forEach(em::persist);
+        IOAccess.importData().forEach(em::persist);
 
         em.getTransaction().begin();
         em.getTransaction().commit();
